@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { getPoints } from '../../entities/collection-point/api.ts';
 import { PointList } from '../../widgets/PointList/PointList.tsx';
 import './PointsPage.css';
@@ -14,6 +15,18 @@ export function PointsPage() {
   } = useQuery({
     queryKey: ['collection-points'],
     queryFn: getPoints,
+  });
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPoints = (points ?? []).filter((point) => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return (
+      point.name.toLowerCase().includes(query) 
+      || 
+      point.address.toLowerCase().includes(query)
+    );
   });
 
   // Состояние загрузки
@@ -80,11 +93,27 @@ export function PointsPage() {
         </div>
 
         <span className="points-count">
-          Найдено: {points.length}
+          Найдено: {filteredPoints.length}
         </span>
       </div>
 
-      <PointList points={points} />
+      <div className="points-search">
+        <input
+          type="search"
+          placeholder="Поиск по названию или адресу..."
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          aria-label="Поиск пунктов приёма"
+        />
+      </div>
+
+      {filteredPoints.length > 0 ? (
+        <PointList points={filteredPoints} />
+      ) : (
+        <div className="points-status">
+          <p>По вашему запросу ничего не найдено.</p>
+        </div>
+      )}
       
     </section>
   );

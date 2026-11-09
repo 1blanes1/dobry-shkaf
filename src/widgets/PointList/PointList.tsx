@@ -1,6 +1,6 @@
 import type { CollectionPoint } from '../../entities/collection-point/types.ts';
-
 import { PointCard } from './PointCard/PointCard.tsx';
+import './PointList.css';
 
 interface PointListProps {
   points: CollectionPoint[];

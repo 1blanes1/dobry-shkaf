@@ -18,15 +18,20 @@ export function PointsPage() {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const filteredPoints = (points ?? []).filter((point) => {
     const query = searchQuery.trim().toLowerCase();
 
-    return (
-      point.name.toLowerCase().includes(query) 
-      || 
-      point.address.toLowerCase().includes(query)
-    );
+    const matchesSearch =
+      point.name.toLowerCase().includes(query) ||
+      point.address.toLowerCase().includes(query);
+
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      point.categories?.includes(selectedCategory);
+
+    return matchesSearch && matchesCategory;
   });
 
   // Состояние загрузки
@@ -105,6 +110,25 @@ export function PointsPage() {
           onChange={(event) => setSearchQuery(event.target.value)}
           aria-label="Поиск пунктов приёма"
         />
+      </div>
+
+      <div className="points-filter">
+        <label htmlFor="category-filter">
+          Категория вещей
+        </label>
+
+        <select
+          id="category-filter"
+          value={selectedCategory}
+          onChange={(event) => setSelectedCategory(event.target.value)}
+        >
+          <option value="all">Все категории</option>
+          <option value="clothes">Одежда</option>
+          <option value="shoes">Обувь</option>
+          <option value="children">Детские вещи</option>
+          <option value="toys">Игрушки</option>
+          <option value="textile">Текстиль</option>
+        </select>
       </div>
 
       {filteredPoints.length > 0 ? (

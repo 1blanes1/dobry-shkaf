@@ -5,6 +5,8 @@ import {
   Stack,
 } from '@mui/material';
 
+import { Link } from 'react-router-dom';
+
 import type { CollectionPoint } from '../../../entities/collection-point/types.ts';
 
 interface PointCardProps {
@@ -14,7 +16,11 @@ interface PointCardProps {
 export function PointCard({ point }: PointCardProps) {
   return (
     <Card
+      component={Link}
+      to={`/points/${point.id}`}
       sx={{
+        textDecoration: 'none',
+        color: 'inherit',
         border: '1px solid #e5e7eb',
         borderRadius: '12px',
         transition: 'box-shadow 0.2s, transform 0.2s',

@@ -1,0 +1,53 @@
+.point-details {
+  width: 100%;
+}
+
+.point-details__back {
+  display: inline-block;
+  margin-bottom: 24px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.point-details__back:hover {
+  text-decoration: underline;
+}
+
+.point-details__content {
+  padding: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.point-details__description {
+  margin-bottom: 28px;
+  color: #6b7280;
+}
+
+.point-details__section {
+  margin-top: 24px;
+}
+
+.point-details__section h2 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.point-details__section p {
+  margin-top: 0;
+}
+
+.point-details__section ul {
+  padding-left: 20px;
+}
+
+.point-details__section li {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 640px) {
+  .point-details__content {
+    padding: 20px;
+  }
+}

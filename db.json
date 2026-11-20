@@ -7,7 +7,10 @@
       "description": "Принимаем одежду, обувь и аксессуары",
       "latitude": 56.8389,
       "longitude": 60.6057,
-      "categories": ["clothes", "shoes"],
+      "categories": [
+        "clothes",
+        "shoes"
+      ],
       "workingHours": "Пн-Пт: 09:00-18:00",
       "phone": "+7 900 000-00-01"
     },
@@ -17,8 +20,11 @@
       "address": "Екатеринбург, ул. Малышева, 25",
       "description": "Принимаем детские вещи и игрушки",
       "latitude": 56.8395,
-      "longitude": 60.6120,
-      "categories": ["children", "toys"],
+      "longitude": 60.612,
+      "categories": [
+        "children",
+        "toys"
+      ],
       "workingHours": "Ежедневно: 10:00-20:00",
       "phone": "+7 900 000-00-02"
     },
@@ -27,9 +33,12 @@
       "name": "Экодом",
       "address": "Екатеринбург, ул. Восточная, 15",
       "description": "Принимаем одежду и текстиль",
-      "latitude": 56.8320,
-      "longitude": 60.6250,
-      "categories": ["clothes", "textile"],
+      "latitude": 56.832,
+      "longitude": 60.625,
+      "categories": [
+        "clothes",
+        "textile"
+      ],
       "workingHours": "Пн-Сб: 09:00-19:00",
       "phone": "+7 900 000-00-03"
     }
@@ -54,6 +63,28 @@
       "city": "Екатеринбург",
       "userId": "2",
       "createdAt": "2026-10-21T12:00:00.000Z"
+    },
+    {
+      "title": "ыыы",
+      "description": "ывопрповлв",
+      "category": "toys",
+      "condition": "new",
+      "city": "Екатеринбург",
+      "imageUrl": "",
+      "userId": "1",
+      "createdAt": "2026-11-16T17:48:24.991Z",
+      "id": "piXFmyL"
+    },
+    {
+      "title": "ssssss",
+      "description": "ssssssssssssssssss",
+      "category": "children",
+      "condition": "used",
+      "city": "Екатеринбург",
+      "imageUrl": "",
+      "userId": "1",
+      "createdAt": "2026-11-16T18:37:28.724Z",
+      "id": "9F0XCHr"
     }
   ],
   "users": [

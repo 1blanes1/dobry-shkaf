@@ -10,8 +10,11 @@ import {
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-import { createListing } from '../../entities/listing/api.ts';
+
+import { createListing, uploadListingImages, } from '../../entities/listing/api.ts';
+import { ListingImageUpload } from '../../features/listing-image-upload/ListingImageUpload.tsx';
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,9 +27,18 @@ import {
 export function CreateListingPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
 
   const createListingMutation = useMutation({
-    mutationFn: createListing,
+    mutationFn: async (data: ListingFormValues) => {
+      const images = await uploadListingImages(imageFiles);
+      return createListing({
+        ...data,
+        images,
+        userId: '1',
+        status: 'active',
+      });
+    },
 
     onSuccess: async (newListing) => {
       await queryClient.invalidateQueries({
@@ -49,15 +61,11 @@ export function CreateListingPage() {
       category: '',
       condition: '',
       city: '',
-      imageUrl: '',
     },
   });
 
   const onSubmit = (data: ListingFormValues) => {
-    createListingMutation.mutate({
-      ...data,
-      userId: '1',
-    });
+    createListingMutation.mutate(data);
   };
 
   return (
@@ -137,12 +145,10 @@ export function CreateListingPage() {
             helperText={errors.city?.message}
           />
 
-          <TextField
-            label="Ссылка на изображение (необязательно)"
-            fullWidth
-            {...register('imageUrl')}
-            error={Boolean(errors.imageUrl)}
-            helperText={errors.imageUrl?.message}
+          <ListingImageUpload
+            files={imageFiles}
+            onChange={setImageFiles}
+            disabled={createListingMutation.isPending}
           />
 
           <Alert severity="info">

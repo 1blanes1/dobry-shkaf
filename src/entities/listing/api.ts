@@ -21,3 +21,40 @@ export async function createListing(
 
   return response.data;
 }
+
+interface UploadImagesResponse {
+  urls: string[];
+}
+
+export async function uploadListingImages(
+  files: File[],
+): Promise<string[]> {
+  if (files.length === 0) {
+    return [];
+  }
+
+  const formData = new FormData();
+
+  files.forEach((file) => {
+    formData.append('files', file);
+  });
+
+  const response = await http.post<UploadImagesResponse>(
+    '/uploads',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  );
+
+  if (
+    !Array.isArray(response.data.urls) ||
+    response.data.urls.length !== files.length
+  ) {
+    throw new Error('Сервер вернул некорректные ссылки на фотографии.');
+  }
+
+  return response.data.urls;
+}

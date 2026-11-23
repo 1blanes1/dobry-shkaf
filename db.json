@@ -96,6 +96,18 @@
       "userId": "1",
       "createdAt": "2026-11-22T20:26:00.915Z",
       "id": "eM6NFR6"
+    },
+    {
+      "title": "ллл",
+      "description": "оооооооооо",
+      "category": "children",
+      "condition": "new",
+      "city": "Екатеринбург",
+      "images": [],
+      "userId": "1",
+      "status": "active",
+      "createdAt": "2026-11-23T15:27:43.835Z",
+      "id": "eISXTn3"
     }
   ],
   "users": [

@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 export const listingSchema = z.object({
@@ -25,11 +26,6 @@ export const listingSchema = z.object({
     .string()
     .trim()
     .min(2, 'Укажите город'),
-
-  imageUrl: z
-    .string()
-    .trim()
-    .optional(),
 });
 
 export type ListingFormValues = z.infer<typeof listingSchema>;

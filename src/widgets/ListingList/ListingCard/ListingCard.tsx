@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardMedia,
   Chip,
   Stack,
   Typography,
@@ -50,6 +51,17 @@ export function ListingCard({ listing }: ListingCardProps) {
         },
       }}
     >
+      {listing.imageUrl && (
+        <CardMedia
+          component="img"
+          height="200"
+          image={listing.imageUrl}
+          alt={listing.title}
+          sx={{
+            objectFit: 'cover',
+          }}
+        />
+      )}
       <CardContent sx={{ p: '22px !important' }}>
         <Stack spacing={2}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>

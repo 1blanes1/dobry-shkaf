@@ -33,6 +33,7 @@ export function ListingCard({ listing }: ListingCardProps) {
   const createdDate = new Date(listing.createdAt).toLocaleDateString(
     'ru-RU',
   );
+  const coverImage = listing.images?.[0] || listing.imageUrl;
 
   return (
     <Card
@@ -51,13 +52,14 @@ export function ListingCard({ listing }: ListingCardProps) {
         },
       }}
     >
-      {listing.imageUrl && (
+      {coverImage && (
         <CardMedia
           component="img"
-          height="200"
-          image={listing.imageUrl}
-          alt={listing.title}
+          image={coverImage}
+          alt={`Фотография вещи: ${listing.title}`}
           sx={{
+            width: '100%',
+            height: 200,
             objectFit: 'cover',
           }}
         />

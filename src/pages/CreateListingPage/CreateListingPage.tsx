@@ -32,9 +32,16 @@ export function CreateListingPage() {
   const createListingMutation = useMutation({
     mutationFn: async (data: ListingFormValues) => {
       const images = await uploadListingImages(imageFiles);
+
       return createListing({
         ...data,
+        subcategory: data.subcategory || undefined,
+        size: data.size || undefined,
         images,
+        pointsCost:
+          data.exchangeType === 'points'
+            ? Number(data.pointsCost)
+            : undefined,
         userId: '1',
         status: 'active',
       });
@@ -59,8 +66,12 @@ export function CreateListingPage() {
       title: '',
       description: '',
       category: '',
+      subcategory: '',
+      size: '',
       condition: '',
       city: '',
+      exchangeType: 'free',
+      pointsCost: '',
     },
   });
 

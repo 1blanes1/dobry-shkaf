@@ -1,9 +1,26 @@
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
 
-import { getListingById } from '../../entities/listing/api.ts';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+
+import {
+  deleteListing,
+  getListingById,
+} from '../../entities/listing/api.ts';
 
 import './ListingDetailsPage.css';
 
@@ -21,9 +38,19 @@ const conditionLabels: Record<string, string> = {
   used: 'Б/у',
 };
 
+const exchangeTypeLabels: Record<string, string> = {
+  free: 'Бесплатно',
+  points: 'За эко-баллы',
+  barter: 'Прямой обмен',
+};
+
 export function ListingDetailsPage() {
   const { id } = useParams<{ id: string }>();
 
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const {
@@ -34,6 +61,22 @@ export function ListingDetailsPage() {
     queryKey: ['listing', id],
     queryFn: () => getListingById(id!),
     enabled: Boolean(id),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteListing,
+
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['listings'],
+      });
+
+      queryClient.removeQueries({
+        queryKey: ['listing', id],
+      });
+
+      navigate('/listings');
+    },
   });
 
   if (isPending) {
@@ -53,6 +96,10 @@ export function ListingDetailsPage() {
       </section>
     );
   }
+
+  // Временный тестовый пользователь до подключения авторизации
+  const currentUserId = '1';
+  const isOwner = listing.userId === currentUserId;
 
   // Поддерживаем новые объявления и старые записи с imageUrl
   const images =
@@ -75,6 +122,33 @@ export function ListingDetailsPage() {
       </Link>
 
       <h1>{listing.title}</h1>
+
+      {isOwner && (
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <Button
+            component={Link}
+            to={`/listings/${listing.id}/edit`}
+            variant="contained"
+          >
+            Редактировать
+          </Button>
+
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => setIsDeleteDialogOpen(true)}
+          >
+            Удалить объявление
+          </Button>
+        </div>
+      )}
 
       {/* Галерея фотографий */}
       <div className="listing-gallery">
@@ -125,6 +199,34 @@ export function ListingDetailsPage() {
         <p>{categoryLabels[listing.category] ?? listing.category}</p>
       </div>
 
+      {listing.subcategory && (
+        <div className="listing-details__section">
+          <h2>Подкатегория</h2>
+          <p>{listing.subcategory}</p>
+        </div>
+      )}
+
+      {listing.size && (
+        <div className="listing-details__section">
+          <h2>Размер</h2>
+          <p>{listing.size}</p>
+        </div>
+      )}
+
+      <div className="listing-details__section">
+        <h2>Формат передачи</h2>
+        <p>
+          {exchangeTypeLabels[listing.exchangeType ?? 'free']}
+        </p>
+      </div>
+
+      {listing.exchangeType === 'points' && (
+        <div className="listing-details__section">
+          <h2>Стоимость в эко-баллах</h2>
+          <p>{listing.pointsCost} эко-баллов</p>
+        </div>
+      )}
+
       <div className="listing-details__section">
         <h2>Состояние вещи</h2>
         <p>{conditionLabels[listing.condition] ?? listing.condition}</p>
@@ -139,6 +241,52 @@ export function ListingDetailsPage() {
         <h2>Дата публикации</h2>
         <p>{createdDate}</p>
       </div>
+
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={() => {
+          if (!deleteMutation.isPending) {
+            setIsDeleteDialogOpen(false);
+          }
+        }}
+      >
+        <DialogTitle>
+          Удалить объявление?
+        </DialogTitle>
+
+        <DialogContent>
+          <p>
+            Объявление «{listing.title}» будет удалено.
+            Это действие нельзя отменить.
+          </p>
+
+          {deleteMutation.isError && (
+            <Alert severity="error">
+              Не удалось удалить объявление. Попробуйте ещё раз.
+            </Alert>
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() => setIsDeleteDialogOpen(false)}
+            disabled={deleteMutation.isPending}
+          >
+            Отмена
+          </Button>
+
+          <Button
+            color="error"
+            variant="contained"
+            disabled={deleteMutation.isPending}
+            onClick={() => deleteMutation.mutate(listing.id)}
+          >
+            {deleteMutation.isPending
+              ? 'Удаляем...'
+              : 'Удалить'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }

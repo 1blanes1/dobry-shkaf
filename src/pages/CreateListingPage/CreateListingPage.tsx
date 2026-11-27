@@ -16,13 +16,45 @@ import { useState } from 'react';
 import { createListing, uploadListingImages, } from '../../entities/listing/api.ts';
 import { ListingImageUpload } from '../../features/listing-image-upload/ListingImageUpload.tsx';
 
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
   listingSchema,
   type ListingFormValues,
 } from './listingSchema.ts';
+
+
+const subcategoryOptions: Record<string, string[]> = {
+  clothes: [
+    'Верхняя одежда',
+    'Повседневная одежда',
+    'Одежда для беременных',
+  ],
+  shoes: [
+    'Взрослая обувь',
+    'Детская обувь',
+    'Спортивная обувь',
+    'Сезонная обувь',
+  ],
+  children: [
+    'Детская одежда',
+    'Детская обувь',
+    'Товары для младенцев',
+    'Крупногабаритные товары',
+  ],
+  toys: [
+    'Развивающие игрушки и погремушки',
+    'Настольные игры и пазлы',
+    'Конструкторы, куклы и машинки',
+    'Крупногабаритные товары',
+  ],
+  textile: [
+    'Постельное бельё, одеяла и подушки',
+    'Шторы и полотенца',
+    'Ветошь для переработки',
+  ],
+};
 
 export function CreateListingPage() {
   const navigate = useNavigate();
@@ -59,6 +91,8 @@ export function CreateListingPage() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<ListingFormValues>({
     resolver: zodResolver(listingSchema),
@@ -73,6 +107,16 @@ export function CreateListingPage() {
       exchangeType: 'free',
       pointsCost: '',
     },
+  });
+
+  const selectedCategory = useWatch({
+    control,
+    name: 'category',
+  });
+  
+  const selectedExchangeType = useWatch({
+    control,
+    name: 'exchangeType',
   });
 
   const onSubmit = (data: ListingFormValues) => {
@@ -123,7 +167,9 @@ export function CreateListingPage() {
             label="Категория"
             defaultValue=""
             fullWidth
-            {...register('category')}
+            {...register('category', {
+              onChange: () => setValue('subcategory', ''),
+            })}
             error={Boolean(errors.category)}
             helperText={errors.category?.message}
           >
@@ -133,6 +179,24 @@ export function CreateListingPage() {
             <MenuItem value="toys">Игрушки</MenuItem>
             <MenuItem value="textile">Текстиль</MenuItem>
           </TextField>
+
+          {selectedCategory && subcategoryOptions[selectedCategory] && (
+            <TextField
+              select
+              label="Подкатегория"
+              defaultValue=""
+              fullWidth
+              {...register('subcategory')}
+            >
+              <MenuItem value="">Не выбрана</MenuItem>
+
+              {subcategoryOptions[selectedCategory].map((subcategory) => (
+                <MenuItem key={subcategory} value={subcategory}>
+                  {subcategory}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
 
           <TextField
             select
@@ -149,12 +213,59 @@ export function CreateListingPage() {
           </TextField>
 
           <TextField
+            label="Размер вещи"
+            placeholder="Например, M, 42, 110–116"
+            fullWidth
+            {...register('size')}
+            error={Boolean(errors.size)}
+            helperText={errors.size?.message || 'Необязательно'}
+          />
+
+          <TextField
             label="Город"
             fullWidth
             {...register('city')}
             error={Boolean(errors.city)}
             helperText={errors.city?.message}
           />
+
+          <TextField
+            select
+            label="Формат передачи"
+            fullWidth
+            {...register('exchangeType')}
+            error={Boolean(errors.exchangeType)}
+            helperText={errors.exchangeType?.message}
+          >
+            <MenuItem value="free">
+              Бесплатно
+            </MenuItem>
+
+            <MenuItem value="points">
+              За эко-баллы
+            </MenuItem>
+
+            <MenuItem value="barter">
+              Прямой обмен
+            </MenuItem>
+          </TextField>
+
+          {selectedExchangeType === 'points' && (
+            <TextField
+              label="Количество эко-баллов"
+              type="number"
+              fullWidth
+              {...register('pointsCost')}
+              error={Boolean(errors.pointsCost)}
+              helperText={errors.pointsCost?.message}
+            />
+          )}
+          
+          {selectedExchangeType === 'barter' && (
+            <Alert severity="info">
+              Опиши в объявлении, какую вещь ты хотел бы получить взамен.
+            </Alert>
+          )}
 
           <ListingImageUpload
             files={imageFiles}

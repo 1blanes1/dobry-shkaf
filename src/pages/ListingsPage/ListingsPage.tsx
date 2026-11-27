@@ -2,11 +2,92 @@ import { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { Button } from '@mui/material';
+import {
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from '@mui/material';
+
 import { Link } from 'react-router-dom';
 
 import { getListings } from '../../entities/listing/api.ts';
 import { ListingList } from '../../widgets/ListingList/ListingList.tsx';
+
+import './ListingsPage.css';
+
+const subcategoryOptions: Record<string, string[]> = {
+  clothes: [
+    'Верхняя одежда',
+    'Повседневная одежда',
+    'Одежда для беременных',
+  ],
+  shoes: [
+    'Взрослая обувь',
+    'Детская обувь',
+    'Спортивная обувь',
+    'Сезонная обувь',
+  ],
+  children: [
+    'Детская одежда',
+    'Детская обувь',
+    'Товары для младенцев',
+    'Крупногабаритные товары',
+  ],
+  toys: [
+    'Развивающие игрушки и погремушки',
+    'Настольные игры и пазлы',
+    'Конструкторы, куклы и машинки',
+    'Крупногабаритные товары',
+  ],
+  textile: [
+    'Постельное бельё, одеяла и подушки',
+    'Шторы и полотенца',
+    'Ветошь для переработки',
+  ],
+};
+
+const categoryOptions = [
+  { value: 'all', label: 'Все категории' },
+  { value: 'clothes', label: 'Одежда' },
+  { value: 'shoes', label: 'Обувь' },
+  { value: 'children', label: 'Детские вещи' },
+  { value: 'toys', label: 'Игрушки' },
+  { value: 'textile', label: 'Текстиль' },
+];
+
+const conditionOptions = [
+  { value: 'all', label: 'Любое состояние' },
+  { value: 'new', label: 'Новое' },
+  { value: 'good', label: 'Хорошее состояние' },
+  { value: 'used', label: 'Б/у' },
+];
+
+const exchangeOptions = [
+  { value: 'all', label: 'Все' },
+  { value: 'free', label: 'Бесплатно' },
+  { value: 'points', label: 'За баллы' },
+  { value: 'barter', label: 'Обмен' },
+];
+
+interface ListingFilters {
+  searchQuery: string;
+  category: string;
+  subcategory: string;
+  size: string;
+  condition: string;
+  exchangeType: string;
+}
+
+const initialFilters: ListingFilters = {
+  searchQuery: '',
+  category: 'all',
+  subcategory: 'all',
+  size: 'all',
+  condition: 'all',
+  exchangeType: 'all',
+};
 
 export function ListingsPage() {
   const {
@@ -18,93 +99,308 @@ export function ListingsPage() {
     queryFn: getListings,
   });
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [draftFilters, setDraftFilters] =
+    useState<ListingFilters>(initialFilters);
 
-  const filteredListings = (listings ?? []).filter((listing) => {
-    const query = searchQuery.trim().toLowerCase();
+  const [appliedFilters, setAppliedFilters] =
+    useState<ListingFilters>(initialFilters);
+
+  const allListings = listings ?? [];
+
+  const sizeOptions = Array.from(
+    new Set(
+      allListings
+        .map((listing) => listing.size)
+        .filter((size): size is string => Boolean(size)),
+    ),
+  ).sort((a, b) => a.localeCompare(b, 'ru'));
+
+  const availableSubcategories =
+    subcategoryOptions[draftFilters.category] ?? [];
+
+  const updateFilter = (
+    key: keyof ListingFilters,
+    value: string,
+  ) => {
+    setDraftFilters((current) => ({
+      ...current,
+      [key]: value,
+    }));
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setDraftFilters((current) => ({
+      ...current,
+      category,
+      subcategory: 'all',
+    }));
+  };
+
+  const handleApplyFilters = () => {
+    setAppliedFilters(draftFilters);
+  };
+
+  const handleResetFilters = () => {
+    setDraftFilters(initialFilters);
+    setAppliedFilters(initialFilters);
+  };
+
+  const filteredListings = allListings.filter((listing) => {
+    const query = appliedFilters.searchQuery.trim().toLowerCase();
 
     const matchesSearch =
+      !query ||
       listing.title.toLowerCase().includes(query) ||
       listing.description.toLowerCase().includes(query) ||
-      listing.city.toLowerCase().includes(query);
+      listing.city.toLowerCase().includes(query) ||
+      listing.subcategory?.toLowerCase().includes(query);
 
     const matchesCategory =
-      selectedCategory === 'all' ||
-      listing.category === selectedCategory;
+      appliedFilters.category === 'all' ||
+      listing.category === appliedFilters.category;
 
-    return matchesSearch && matchesCategory;
+    const matchesSubcategory =
+      appliedFilters.subcategory === 'all' ||
+      listing.subcategory === appliedFilters.subcategory;
+
+    const matchesSize =
+      appliedFilters.size === 'all' ||
+      listing.size === appliedFilters.size;
+
+    const matchesCondition =
+      appliedFilters.condition === 'all' ||
+      listing.condition === appliedFilters.condition;
+
+    const matchesExchangeType =
+      appliedFilters.exchangeType === 'all' ||
+      (listing.exchangeType ?? 'free') ===
+        appliedFilters.exchangeType;
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesSubcategory &&
+      matchesSize &&
+      matchesCondition &&
+      matchesExchangeType
+    );
   });
 
-  if (isPending) {
-    return (
-      <section>
-        <h1>Обмен вещами</h1>
-        <p>Загружаем объявления...</p>
-      </section>
-    );
-  }
-
-  if (isError) {
-    return (
-      <section>
-        <h1>Обмен вещами</h1>
-        <p>Не удалось загрузить объявления. Попробуйте позже.</p>
-      </section>
-    );
-  }
-
-  if (listings.length === 0) {
-    return (
-      <section>
-        <h1>Обмен вещами</h1>
-        <p>Пока нет доступных объявлений.</p>
-      </section>
-    );
-  }
-
   return (
-    <section>
-      <h1>Обмен вещами</h1>
-      <p>Найди вещь или предложи свою для обмена.</p>
+    <section className="listings-page">
+      <h1 className="visually-hidden">Обмен вещами</h1>
 
-      <Button
-        component={Link}
-        to="/listings/create"
-        variant="contained"
-        sx={{ mt: 2, mb: 3 }}
-      >
-        Создать объявление
-      </Button>
+      <aside className="listings-sidebar">
+        <TextField
+          className="listings-city-field"
+          fullWidth
+          size="small"
+          type="search"
+          placeholder="Введите город..."
+          value={draftFilters.searchQuery}
+          onChange={(event) =>
+            updateFilter('searchQuery', event.target.value)
+          }
+          slotProps={{
+            htmlInput: {
+              'aria-label': 'Поиск по объявлениям и городу',
+            },
+          }}
+        />
 
-      <p>Найдено объявлений: {filteredListings.length}</p>
+        <div className="listings-sidebar__filters">
+          <h2 className="listings-sidebar__title">Фильтры</h2>
 
-      <input
-        type="search"
-        placeholder="Поиск по названию, описанию или городу..."
-        value={searchQuery}
-        onChange={(event) => setSearchQuery(event.target.value)}
-        aria-label="Поиск объявлений"
-      />
+          <div className="listings-filter-group">
+            <p className="listings-filter-group__title">
+              Категория
+            </p>
 
-      <select
-        value={selectedCategory}
-        onChange={(event) => setSelectedCategory(event.target.value)}
-        aria-label="Фильтр по категории"
-      >
-        <option value="all">Все категории</option>
-        <option value="clothes">Одежда</option>
-        <option value="shoes">Обувь</option>
-        <option value="children">Детские вещи</option>
-        <option value="toys">Игрушки</option>
-        <option value="textile">Текстиль</option>
-      </select>
+            <RadioGroup
+              className="listings-radio-group"
+              value={draftFilters.category}
+              onChange={(event) =>
+                handleCategoryChange(event.target.value)
+              }
+            >
+              {categoryOptions.map((option) => (
+                <FormControlLabel
+                  key={option.value}
+                  value={option.value}
+                  control={<Radio size="small" />}
+                  label={option.label}
+                />
+              ))}
+            </RadioGroup>
+          </div>
 
-      {filteredListings.length > 0 ? (
-        <ListingList listings={filteredListings} />
-      ) : (
-        <p>По вашему запросу ничего не найдено.</p>
-      )}
+          <div className="listings-select-group">
+            <label
+              className="listings-select-group__label"
+              htmlFor="listing-size"
+            >
+              Размер
+            </label>
+
+            <select
+              id="listing-size"
+              className="listings-select"
+              value={draftFilters.size}
+              onChange={(event) =>
+                updateFilter('size', event.target.value)
+              }
+            >
+              <option value="all">Любой размер</option>
+
+              {sizeOptions.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {draftFilters.category !== 'all' &&
+            availableSubcategories.length > 0 && (
+              <div className="listings-select-group">
+                <label
+                  className="listings-select-group__label"
+                  htmlFor="listing-subcategory"
+                >
+                  Подкатегория
+                </label>
+
+                <select
+                  id="listing-subcategory"
+                  className="listings-select"
+                  value={draftFilters.subcategory}
+                  onChange={(event) =>
+                    updateFilter(
+                      'subcategory',
+                      event.target.value,
+                    )
+                  }
+                >
+                  <option value="all">
+                    Все подкатегории
+                  </option>
+
+                  {availableSubcategories.map((subcategory) => (
+                    <option
+                      key={subcategory}
+                      value={subcategory}
+                    >
+                      {subcategory}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+          <div className="listings-filter-group">
+            <p className="listings-filter-group__title">
+              Формат обмена
+            </p>
+
+            <RadioGroup
+              className="listings-radio-group"
+              value={draftFilters.exchangeType}
+              onChange={(event) =>
+                updateFilter('exchangeType', event.target.value)
+              }
+            >
+              {exchangeOptions.map((option) => (
+                <FormControlLabel
+                  key={option.value}
+                  value={option.value}
+                  control={<Radio size="small" />}
+                  label={option.label}
+                />
+              ))}
+            </RadioGroup>
+          </div>
+
+          <div className="listings-filter-group">
+            <p className="listings-filter-group__title">
+              Состояние
+            </p>
+
+            <RadioGroup
+              className="listings-radio-group"
+              value={draftFilters.condition}
+              onChange={(event) =>
+                updateFilter('condition', event.target.value)
+              }
+            >
+              {conditionOptions.map((option) => (
+                <FormControlLabel
+                  key={option.value}
+                  value={option.value}
+                  control={<Radio size="small" />}
+                  label={option.label}
+                />
+              ))}
+            </RadioGroup>
+          </div>
+
+          <div className="listings-sidebar__actions">
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={handleApplyFilters}
+            >
+              Применить
+            </Button>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleResetFilters}
+            >
+              Сбросить фильтры
+            </Button>
+          </div>
+        </div>
+      </aside>
+
+      <div className="listings-results">
+        <div className="listings-results__toolbar">
+          <span>
+            Найдено объявлений: {filteredListings.length}
+          </span>
+
+          <Button
+            component={Link}
+            to="/listings/create"
+            variant="contained"
+          >
+            Создать объявление
+          </Button>
+        </div>
+
+        {isPending && (
+          <p>Загружаем объявления...</p>
+        )}
+
+        {isError && (
+          <p>
+            Не удалось загрузить объявления. Попробуйте позже.
+          </p>
+        )}
+
+        {!isPending && !isError && allListings.length === 0 && (
+          <p>Пока нет доступных объявлений.</p>
+        )}
+
+        {!isPending &&
+          !isError &&
+          allListings.length > 0 &&
+          (filteredListings.length > 0 ? (
+            <ListingList listings={filteredListings} />
+          ) : (
+            <p>По вашему запросу ничего не найдено.</p>
+          ))}
+      </div>
     </section>
   );
 }

@@ -3,13 +3,14 @@ import {
   CardContent,
   CardMedia,
   Chip,
-  Stack,
   Typography,
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
 
 import type { Listing } from '../../../entities/listing/types.ts';
+
+import './ListingCard.css';
 
 interface ListingCardProps {
   listing: Listing;
@@ -23,86 +24,88 @@ const categoryLabels: Record<string, string> = {
   textile: 'Текстиль',
 };
 
-const conditionLabels: Record<string, string> = {
-  new: 'Новое',
-  good: 'Хорошее состояние',
-  used: 'Б/у',
+const exchangeTypeLabels: Record<string, string> = {
+  free: 'Даром',
+  points: 'За эко-баллы',
+  barter: 'Обмен',
 };
 
 export function ListingCard({ listing }: ListingCardProps) {
-  const createdDate = new Date(listing.createdAt).toLocaleDateString(
-    'ru-RU',
-  );
-  const coverImage = listing.images?.[0] || listing.imageUrl;
+  const coverImage = listing.images?.[0];
+
+  const createdDate = new Date(
+    listing.createdAt,
+  ).toLocaleDateString('ru-RU');
+
+  const exchangeType = listing.exchangeType ?? 'free';
+
+  const exchangeLabel =
+    exchangeType === 'points' && listing.pointsCost !== undefined
+      ? `${listing.pointsCost} баллов`
+      : exchangeTypeLabels[exchangeType];
+
+  const categoryLabel =
+    categoryLabels[listing.category] ?? listing.category;
 
   return (
     <Card
       component={Link}
       to={`/listings/${listing.id}`}
-      sx={{
-        height: '100%',
-        textDecoration: 'none',
-        color: 'inherit',
-        border: '1px solid #e5e7eb',
-        borderRadius: '12px',
-        transition: 'box-shadow 0.2s, transform 0.2s',
-        '&:hover': {
-          transform: 'translateY(-3px)',
-          boxShadow: '0 6px 20px rgb(0 0 0 / 6%)',
-        },
-      }}
+      className="listing-card"
+      elevation={0}
     >
-      {coverImage && (
-        <CardMedia
-          component="img"
-          image={coverImage}
-          alt={`Фотография вещи: ${listing.title}`}
-          sx={{
-            width: '100%',
-            height: 200,
-            objectFit: 'cover',
-          }}
-        />
-      )}
-      <CardContent sx={{ p: '22px !important' }}>
-        <Stack spacing={2}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {listing.title}
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary">
-            {listing.description}
-          </Typography>
-
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              flexWrap: 'wrap',
-              gap: 1,
-            }}
+      <div className="listing-card__image-wrapper">
+        {coverImage ? (
+          <CardMedia
+            component="img"
+            image={coverImage}
+            alt={`Фотография вещи: ${listing.title}`}
+            className="listing-card__image"
+          />
+        ) : (
+          <div
+            className="listing-card__image-placeholder"
+            role="img"
+            aria-label="Фотография отсутствует"
           >
-            <Chip
-              label={categoryLabels[listing.category] ?? listing.category}
-              size="small"
-              color="success"
-              variant="outlined"
-            />
+            <span>Фото отсутствует</span>
+          </div>
+        )}
+      </div>
 
-            <Chip
-              label={conditionLabels[listing.condition] ?? listing.condition}
-              size="small"
-            />
-          </Stack>
+      <CardContent className="listing-card__content">
+        <Typography
+          component="div"
+          className="listing-card__category"
+        >
+          {categoryLabel}
+          {listing.subcategory && ` · ${listing.subcategory}`}
+        </Typography>
 
-          <Typography variant="body2">
-            <strong>Город:</strong> {listing.city}
-          </Typography>
+        <Typography
+          component="h2"
+          className="listing-card__title"
+        >
+          {listing.title}
+        </Typography>
 
-          <Typography variant="caption" color="text.secondary">
-            Опубликовано: {createdDate}
-          </Typography>
-        </Stack>
+        <div className="listing-card__meta">
+          <span className="listing-card__city">
+            {listing.city}
+          </span>
+
+          <span className="listing-card__date">
+            {createdDate}
+          </span>
+        </div>
+
+        <div className="listing-card__footer">
+          <Chip
+            label={exchangeLabel}
+            size="small"
+            className={`listing-card__exchange listing-card__exchange--${exchangeType}`}
+          />
+        </div>
       </CardContent>
     </Card>
   );

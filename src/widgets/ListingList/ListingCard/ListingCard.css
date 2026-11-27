@@ -1,0 +1,186 @@
+.listing-card.MuiCard-root {
+  display: flex;
+  flex-direction: column;
+
+  width: 300px;
+  height: 322px;
+  padding: 15px;
+
+  overflow: hidden;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #1f2937;
+  text-decoration: none;
+
+  box-shadow: 0 2px 10px rgb(31 41 55 / 5%);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.listing-card.MuiCard-root:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgb(31 41 55 / 10%);
+}
+
+/* Изображение */
+
+.listing-card__image-wrapper {
+  flex: 0 0 180px;
+
+  width: 100%;
+  height: 180px;
+
+  overflow: hidden;
+  border-radius: 10px;
+
+  background: #f0f3f2;
+}
+
+.listing-card__image.MuiCardMedia-root {
+  display: block;
+
+  width: 100%;
+  height: 180px;
+
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listing-card:hover .listing-card__image {
+  transform: scale(1.03);
+}
+
+.listing-card__image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  background: #f0f3f2;
+  color: #78909c;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 13px;
+}
+
+/* Содержимое карточки */
+
+.listing-card__content.MuiCardContent-root {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  min-height: 0;
+  padding: 8px 0 0 !important;
+}
+
+.listing-card__category.MuiTypography-root {
+  overflow: hidden;
+
+  color: #607d8b;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 14px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listing-card__title.MuiTypography-root {
+  display: -webkit-box;
+
+  margin-top: 3px;
+
+  overflow: hidden;
+
+  color: #1f2937;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 22px;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Город и дата */
+
+.listing-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+  margin-top: auto;
+
+  min-width: 0;
+  padding-top: 4px;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 10px;
+  line-height: 13px;
+}
+
+.listing-card__city {
+  overflow: hidden;
+
+  color: #607d8b;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.listing-card__date {
+  flex-shrink: 0;
+  color: #90a4ae;
+}
+
+/* Формат передачи */
+
+.listing-card__footer {
+  display: flex;
+  align-items: center;
+
+  margin-top: 6px;
+}
+
+.listing-card__exchange.MuiChip-root {
+  height: 22px;
+  border-radius: 6px;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.listing-card__exchange--free.MuiChip-root {
+  background: #e5f4ed;
+  color: #237547;
+}
+
+.listing-card__exchange--points.MuiChip-root {
+  background: #fff3d8;
+  color: #956300;
+}
+
+.listing-card__exchange--barter.MuiChip-root {
+  background: #e8efff;
+  color: #3157d5;
+}
+
+/* Мобильная версия */
+
+@media (max-width: 760px) {
+  .listing-card.MuiCard-root {
+    width: 100%;
+  }
+}

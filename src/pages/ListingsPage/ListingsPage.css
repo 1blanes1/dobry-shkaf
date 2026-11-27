@@ -1,0 +1,230 @@
+.listings-page {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 940px);
+  column-gap: 40px;
+  align-items: start;
+
+  width: min(1340px, calc(100vw - 48px));
+
+  margin-top: -9px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.listings-sidebar {
+  width: 360px;
+  min-height: 872px;
+  padding: 15px 10px 20px;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.listings-city-field {
+  margin-bottom: 20px !important;
+}
+
+.listings-city-field .MuiOutlinedInput-root {
+  height: 46px;
+  border-radius: 8px;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.listings-city-field .MuiOutlinedInput-notchedOutline {
+  border-color: #e0e0e0;
+}
+
+.listings-sidebar__filters {
+  margin-top: 0;
+}
+
+.listings-sidebar__title {
+  margin: 0 0 15px;
+  color: #212121;
+  font-family: 'HSE Sans', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.listings-filter-group {
+  margin: 0 0 24px;
+}
+
+.listings-filter-group__title {
+  margin: 0 0 10px;
+  color: #212121;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.listings-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listings-radio-group .MuiFormControlLabel-root {
+  min-height: 20px;
+  margin: 0;
+  color: #1f2937;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 16px;
+}
+
+.listings-radio-group .MuiRadio-root {
+  padding: 0 8px 0 0;
+}
+
+.listings-radio-group .MuiSvgIcon-root {
+  font-size: 20px;
+}
+
+.listings-select-group {
+  width: 224px;
+  margin: 0 0 24px;
+}
+
+.listings-select-group__label {
+  display: block;
+  margin-bottom: 6px;
+  color: #607d8b;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 13px;
+}
+
+.listings-select {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  outline: none;
+  background: #ffffff;
+  color: #1f2937;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.listings-select:focus {
+  border-color: #00695c;
+}
+
+.listings-sidebar__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.listings-sidebar__actions .MuiButton-root {
+  min-height: 40px;
+  border-radius: 12px;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 14px;
+  text-transform: none;
+}
+
+.listings-sidebar__actions .MuiButton-contained {
+  background: #00695c;
+}
+
+.listings-sidebar__actions .MuiButton-contained:hover {
+  background: #00574d;
+}
+
+.listings-sidebar__actions .MuiButton-outlined {
+  border-color: #00695c;
+  color: #00695c;
+}
+
+.listings-results {
+  min-width: 0;
+}
+
+.listings-results__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  color: #607d8b;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.listings-results__toolbar .MuiButton-root {
+  border-radius: 10px;
+  background: #00695c;
+  font-family: Gilroy, Arial, sans-serif;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 1387px) {
+  .listings-page {
+    grid-template-columns: 360px minmax(0, 1fr);
+    column-gap: 24px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .listings-page {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+
+  .listings-sidebar {
+    width: 300px;
+  }
+
+  .listings-sidebar__actions .MuiButton-root {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .listings-page {
+    grid-template-columns: 260px minmax(0, 1fr);
+    column-gap: 20px;
+  }
+
+  .listings-sidebar {
+    width: 260px;
+  }
+
+  .listings-select-group {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .listings-page {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 24px;
+    margin-top: 0;
+  }
+
+  .listings-sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .listings-results__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -9,7 +9,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 16px 5%;
+  min-height: 80px;
+  padding: 20px 5%;
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -79,6 +80,8 @@
 
 @media (max-width: 640px) {
   .app-header {
+    min-height: 80px;
+    padding: 16px 5%;
     align-items: flex-start;
     flex-direction: column;
     gap: 16px;

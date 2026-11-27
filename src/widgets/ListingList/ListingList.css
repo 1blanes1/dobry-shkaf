@@ -11,13 +11,13 @@
   min-width: 0;
 }
 
-@media (max-width: 1387px) {
+@media (max-width: 1371px) {
   .listings-list {
     grid-template-columns: repeat(2, 300px);
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 947px) {
   .listings-list {
     grid-template-columns: minmax(0, 300px);
   }

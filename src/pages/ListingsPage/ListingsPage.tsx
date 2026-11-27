@@ -105,6 +105,8 @@ export function ListingsPage() {
   const [appliedFilters, setAppliedFilters] =
     useState<ListingFilters>(initialFilters);
 
+const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+
   const allListings = listings ?? [];
 
   const sizeOptions = Array.from(
@@ -138,11 +140,13 @@ export function ListingsPage() {
 
   const handleApplyFilters = () => {
     setAppliedFilters(draftFilters);
+    setIsFiltersOpen(false);
   };
 
   const handleResetFilters = () => {
     setDraftFilters(initialFilters);
     setAppliedFilters(initialFilters);
+    setIsFiltersOpen(false);
   };
 
   const filteredListings = allListings.filter((listing) => {
@@ -208,8 +212,23 @@ export function ListingsPage() {
           }}
         />
 
-        <div className="listings-sidebar__filters">
-          <h2 className="listings-sidebar__title">Фильтры</h2>
+        <div
+          className={`listings-sidebar__filters ${
+            isFiltersOpen ? 'listings-sidebar__filters--open' : ''
+          }`}
+        >
+          <div className="listings-sidebar__heading">
+            <h2 className="listings-sidebar__title">Фильтры</h2>
+
+            <Button
+              className="listings-sidebar__toggle"
+              variant="outlined"
+              size="small"
+              onClick={() => setIsFiltersOpen((current) => !current)}
+            >
+              {isFiltersOpen ? 'Скрыть' : 'Показать фильтры'}
+            </Button>
+          </div>
 
           <div className="listings-filter-group">
             <p className="listings-filter-group__title">

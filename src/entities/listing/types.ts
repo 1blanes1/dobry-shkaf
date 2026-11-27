@@ -42,3 +42,7 @@ export interface CreateListingDto {
   city: string;
   userId: string;
 }
+
+export type UpdateListingDto = Partial<
+  Omit<CreateListingDto, 'userId'>
+>;

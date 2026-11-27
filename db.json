@@ -87,27 +87,36 @@
       "id": "9F0XCHr"
     },
     {
-      "title": "Футбольный мяч",
-      "description": "Классический бело-черный мяч 5 размера для игры в футбол. Без грыж и визуальных дефектов",
-      "category": "toys",
-      "condition": "new",
+      "title": "Обувь 1",
+      "description": "Описание Обуви 1",
+      "category": "shoes",
+      "subcategory": "Спортивная обувь",
+      "size": "42",
+      "condition": "good",
       "city": "Екатеринбург",
-      "imageUrl": "https://avatars.mds.yandex.net/get-mpic/15413745/2a000001994c1a76636870ee214aae20bf5a/450x600",
-      "userId": "1",
-      "createdAt": "2026-11-22T20:26:00.915Z",
-      "id": "eM6NFR6"
-    },
-    {
-      "title": "ллл",
-      "description": "оооооооооо",
-      "category": "children",
-      "condition": "new",
-      "city": "Екатеринбург",
+      "exchangeType": "points",
+      "pointsCost": 50,
       "images": [],
       "userId": "1",
       "status": "active",
-      "createdAt": "2026-11-23T15:27:43.835Z",
-      "id": "eISXTn3"
+      "createdAt": "2026-11-24T17:10:15.531Z",
+      "id": "eonYTYk"
+    },
+    {
+      "title": "Тестовая обувь",
+      "description": "Описание тестовой обуви",
+      "category": "shoes",
+      "subcategory": "Спортивная обувь",
+      "size": "42",
+      "condition": "good",
+      "city": "Екатеринбург",
+      "exchangeType": "points",
+      "pointsCost": 50,
+      "images": [],
+      "userId": "1",
+      "status": "active",
+      "createdAt": "2026-11-24T20:43:01.211Z",
+      "id": "67WoRZ6"
     }
   ],
   "users": [

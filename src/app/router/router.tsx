@@ -7,6 +7,7 @@ import { PointDetailsPage } from '../../pages/PointDetailsPage/PointDetailsPage.
 import { ListingsPage } from '../../pages/ListingsPage/ListingsPage.tsx';
 import { CreateListingPage } from '../../pages/CreateListingPage/CreateListingPage.tsx';
 import { ListingDetailsPage } from '../../pages/ListingDetailsPage/ListingDetailsPage.tsx';
+import { EditListingPage } from '../../pages/EditListingPage/EditListingPage.tsx';
 import { NotFoundPage } from '../../pages/NotFoundPage/NotFoundPage.tsx';
 
 export const router = createBrowserRouter([
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: 'listings/:id',
         element: <ListingDetailsPage />,
+      },
+      {
+        path: 'listings/:id/edit',
+        element: <EditListingPage />,
       },
       {
         path: '*',

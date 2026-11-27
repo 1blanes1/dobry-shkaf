@@ -1,5 +1,5 @@
 import { http } from '../../shared/api/http.ts';
-import type { Listing, CreateListingDto } from './types.ts';
+import type { Listing, CreateListingDto, UpdateListingDto, } from './types.ts';
 
 export async function getListings(): Promise<Listing[]> {
   const response = await http.get<Listing[]>('/listings');
@@ -57,4 +57,21 @@ export async function uploadListingImages(
   }
 
   return response.data.urls;
+}
+
+
+export async function updateListing(
+  id: string,
+  data: UpdateListingDto,
+): Promise<Listing> {
+  const response = await http.patch<Listing>(
+    `/listings/${id}`,
+    data,
+  );
+
+  return response.data;
+}
+
+export async function deleteListing(id: string): Promise<void> {
+  await http.delete(`/listings/${id}`);
 }

@@ -1,3 +1,6 @@
+
+/* Основная сетка страницы */
+
 .listings-page {
   display: grid;
   grid-template-columns: 360px minmax(0, 940px);
@@ -23,35 +26,72 @@
   border: 0;
 }
 
+/* Боковая панель */
+
 .listings-sidebar {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
   width: 360px;
   min-height: 872px;
-  padding: 15px 10px 20px;
+  padding: 15px 10px;
+
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 20px;
 }
 
+/* Поиск */
+
 .listings-city-field {
-  margin-bottom: 20px !important;
+  width: 100%;
+  margin: 0 !important;
 }
 
 .listings-city-field .MuiOutlinedInput-root {
   height: 46px;
-  border-radius: 8px;
+  border-radius: 20px;
   font-family: Gilroy, Arial, sans-serif;
   font-size: 16px;
 }
 
 .listings-city-field .MuiOutlinedInput-notchedOutline {
-  border-color: #e0e0e0;
+  border-color: #c7c7c7;
 }
 
+.listings-city-field .MuiOutlinedInput-root:hover
+.MuiOutlinedInput-notchedOutline {
+  border-color: #00695c;
+}
+
+.listings-city-field .MuiOutlinedInput-input {
+  padding: 10px 15px;
+}
+
+.listings-city-field .MuiOutlinedInput-input::placeholder {
+  color: #607d8b;
+  opacity: 1;
+}
+
+/* Фильтры */
+
 .listings-sidebar__filters {
-  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0;
+}
+
+.listings-sidebar__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .listings-sidebar__title {
-  margin: 0 0 15px;
+  margin: 0;
   color: #212121;
   font-family: 'HSE Sans', Arial, sans-serif;
   font-size: 18px;
@@ -60,17 +100,22 @@
 }
 
 .listings-filter-group {
-  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
 }
 
 .listings-filter-group__title {
-  margin: 0 0 10px;
+  margin: 0;
   color: #212121;
   font-family: Gilroy, Arial, sans-serif;
   font-size: 16px;
-  font-weight: 500;
-  line-height: 20px;
+  font-weight: 400;
+  line-height: 19px;
 }
+
+/* Радиокнопки */
 
 .listings-radio-group {
   display: flex;
@@ -78,45 +123,69 @@
   gap: 10px;
 }
 
-.listings-radio-group .MuiFormControlLabel-root {
+.listings-sidebar .MuiFormControlLabel-root {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   min-height: 20px;
   margin: 0;
-  color: #1f2937;
+}
+
+.listings-sidebar .MuiFormControlLabel-label {
+  color: #212121;
   font-family: Gilroy, Arial, sans-serif;
   font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
 }
 
-.listings-radio-group .MuiRadio-root {
-  padding: 0 8px 0 0;
+.listings-sidebar .MuiRadio-root {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  color: #9ca3af;
 }
 
-.listings-radio-group .MuiSvgIcon-root {
+.listings-sidebar .MuiRadio-root.Mui-checked {
+  color: #00695c;
+}
+
+.listings-sidebar .MuiRadio-root .MuiSvgIcon-root {
   font-size: 20px;
 }
 
+/* Выпадающие списки */
+
 .listings-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 224px;
-  margin: 0 0 24px;
+  margin: 0;
 }
 
 .listings-select-group__label {
   display: block;
-  margin-bottom: 6px;
-  color: #607d8b;
-  font-family: Gilroy, Arial, sans-serif;
-  font-size: 13px;
+  color: #757575;
+  font-family: 'HSE Sans', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
 }
 
 .listings-select {
+  box-sizing: border-box;
   width: 100%;
   height: 32px;
   padding: 0 10px;
+
   border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  border-radius: 8px;
+
   outline: none;
   background: #ffffff;
-  color: #1f2937;
-  font-family: Gilroy, Arial, sans-serif;
+  color: #757575;
+
+  font-family: 'HSE Sans', Arial, sans-serif;
   font-size: 14px;
 }
 
@@ -124,23 +193,32 @@
   border-color: #00695c;
 }
 
+/* Кнопки фильтров */
+
 .listings-sidebar__actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 24px;
+  width: 100%;
+  margin-top: 5px;
 }
 
 .listings-sidebar__actions .MuiButton-root {
-  min-height: 40px;
+  width: 100%;
+  height: 40px;
   border-radius: 12px;
+
   font-family: Gilroy, Arial, sans-serif;
   font-size: 14px;
+  font-weight: 500;
   text-transform: none;
+  box-shadow: none;
 }
 
 .listings-sidebar__actions .MuiButton-contained {
+  border: 1px solid #00695c;
   background: #00695c;
+  color: #ffffff;
 }
 
 .listings-sidebar__actions .MuiButton-contained:hover {
@@ -148,9 +226,28 @@
 }
 
 .listings-sidebar__actions .MuiButton-outlined {
+  border: 1px solid transparent;
+  background: #f4f4f4;
+  color: #212121;
+}
+
+.listings-sidebar__actions .MuiButton-outlined:hover {
+  border-color: transparent;
+  background: #eaeaea;
+}
+
+/* Кнопка мобильного раскрытия фильтров */
+
+.listings-sidebar__toggle.MuiButton-root {
+  display: none;
   border-color: #00695c;
   color: #00695c;
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 13px;
+  text-transform: none;
 }
+
+/* Область объявлений */
 
 .listings-results {
   min-width: 0;
@@ -162,18 +259,34 @@
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 16px;
+
   color: #607d8b;
   font-family: Gilroy, Arial, sans-serif;
   font-size: 14px;
 }
 
 .listings-results__toolbar .MuiButton-root {
+  min-height: 36px;
+  padding: 6px 16px;
+
   border-radius: 10px;
   background: #00695c;
+  color: #ffffff;
+
   font-family: Gilroy, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
   text-transform: none;
   white-space: nowrap;
+  box-shadow: none;
 }
+
+.listings-results__toolbar .MuiButton-root:hover {
+  background: #00574d;
+  box-shadow: none;
+}
+
+/* Адаптивность */
 
 @media (max-width: 1387px) {
   .listings-page {
@@ -190,20 +303,16 @@
   .listings-sidebar {
     width: 300px;
   }
-
-  .listings-sidebar__actions .MuiButton-root {
-    width: 100%;
-  }
 }
 
 @media (max-width: 1000px) {
   .listings-page {
-    grid-template-columns: 260px minmax(0, 1fr);
-    column-gap: 20px;
+    grid-template-columns: 240px minmax(0, 1fr);
+    column-gap: 16px;
   }
 
   .listings-sidebar {
-    width: 260px;
+    width: 240px;
   }
 
   .listings-select-group {
@@ -223,37 +332,6 @@
     min-height: auto;
   }
 
-  .listings-results__toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-}
-
-.listings-sidebar__heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.listings-sidebar__toggle.MuiButton-root {
-  display: none;
-  border-color: #00695c;
-  color: #00695c;
-  font-family: Gilroy, Arial, sans-serif;
-  font-size: 13px;
-  text-transform: none;
-}
-
-@media (max-width: 760px) {
-  .listings-sidebar__heading {
-    margin-bottom: 12px;
-  }
-
-  .listings-sidebar__title {
-    margin-bottom: 0;
-  }
-
   .listings-sidebar__toggle.MuiButton-root {
     display: inline-flex;
   }
@@ -270,12 +348,8 @@
     display: none;
   }
 
-  .listings-sidebar__filters--open .listings-filter-group,
-  .listings-sidebar__filters--open .listings-select-group {
-    margin-bottom: 18px;
-  }
-
-  .listings-sidebar__filters--open .listings-sidebar__actions {
-    margin-top: 16px;
+  .listings-results__toolbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

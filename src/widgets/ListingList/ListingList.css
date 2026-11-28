@@ -1,34 +1,116 @@
-.listings-list {
-  display: grid;
-  grid-template-columns: repeat(3, 300px);
-  column-gap: 20px;
-  row-gap: 35px;
-  align-items: start;
-}
 
-.listings-list > * {
-  width: 300px;
+/* Общий контейнер списка и пагинации */
+
+.listings-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+
+  width: 100%;
   min-width: 0;
 }
 
-@media (max-width: 1371px) {
-  .listings-list {
-    grid-template-columns: repeat(2, 300px);
-  }
+/* Сетка объявлений */
+
+.listings-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 300px));
+  justify-content: space-between;
+
+  column-gap: 20px;
+  row-gap: 35px;
+
+  align-items: start;
+  width: 100%;
 }
+
+.listings-list > * {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Пагинация */
+
+.listings-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+}
+
+.listings-pagination .MuiPagination-ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.listings-pagination .MuiPaginationItem-root {
+  box-sizing: border-box;
+
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+
+  margin: 0;
+  padding: 0;
+
+  border: 1px solid #bebebe;
+  border-radius: 15px;
+
+  background: #ffffff;
+  color: #000000;
+
+  font-family: Gilroy, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.listings-pagination .MuiPaginationItem-root:hover {
+  background: #f2ffc5;
+}
+
+.listings-pagination .MuiPaginationItem-root.Mui-selected {
+  border: 2px solid #00695c;
+
+  background: rgb(242 255 197 / 30%);
+  color: #00695c;
+}
+
+.listings-pagination .MuiPaginationItem-root.Mui-selected:hover {
+  background: rgb(242 255 197 / 60%);
+}
+
+.listings-pagination .MuiPaginationItem-root.Mui-disabled {
+  opacity: 0.3;
+}
+
+/* Планшеты */
 
 @media (max-width: 947px) {
   .listings-list {
-    grid-template-columns: minmax(0, 300px);
+    grid-template-columns: repeat(2, minmax(0, 300px));
+    justify-content: space-between;
   }
 }
+
+/* Мобильные устройства */
 
 @media (max-width: 760px) {
   .listings-list {
     grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
+    justify-items: center;
+  }
+
+  .listings-pagination .MuiPagination-ul {
+    gap: 8px;
   }
 
   .listings-list > * {
     width: 100%;
+    max-width: 300px;
   }
 }

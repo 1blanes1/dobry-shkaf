@@ -27,40 +27,17 @@ import {
 import type { Listing, UpdateListingDto } from '../../entities/listing/types.ts';
 
 import {
+  listingCategoryOptions,
+  getListingSubcategoryOptions,
+  listingConditionOptions,
+} from '../../entities/listing/constants.ts';
+
+import {
   listingSchema,
+  type ListingFormInput,
   type ListingFormValues,
 } from '../CreateListingPage/listingSchema.ts';
 
-const subcategoryOptions: Record<string, string[]> = {
-  clothes: [
-    'Верхняя одежда',
-    'Повседневная одежда',
-    'Одежда для беременных',
-  ],
-  shoes: [
-    'Взрослая обувь',
-    'Детская обувь',
-    'Спортивная обувь',
-    'Сезонная обувь',
-  ],
-  children: [
-    'Детская одежда',
-    'Детская обувь',
-    'Товары для младенцев',
-    'Крупногабаритные товары',
-  ],
-  toys: [
-    'Развивающие игрушки и погремушки',
-    'Настольные игры и пазлы',
-    'Конструкторы, куклы и машинки',
-    'Крупногабаритные товары',
-  ],
-  textile: [
-    'Постельное бельё, одеяла и подушки',
-    'Шторы и полотенца',
-    'Ветошь для переработки',
-  ],
-};
 
 export function EditListingPage() {
   const { id } = useParams<{ id: string }>();
@@ -105,7 +82,7 @@ function EditListingForm({ listing }: EditListingFormProps) {
     control,
     setValue,
     formState: { errors },
-  } = useForm<ListingFormValues>({
+  } = useForm<ListingFormInput, unknown, ListingFormValues>({
     resolver: zodResolver(listingSchema),
     defaultValues: {
       title: listing.title,
@@ -129,6 +106,9 @@ function EditListingForm({ listing }: EditListingFormProps) {
     control,
     name: 'exchangeType',
   });
+
+  const availableSubcategories =
+    getListingSubcategoryOptions(selectedCategory);
 
   const updateMutation = useMutation({
     mutationFn: (data: UpdateListingDto) =>
@@ -165,6 +145,8 @@ function EditListingForm({ listing }: EditListingFormProps) {
 
     updateMutation.mutate(updateData);
   };
+
+  const listingImages = listing.images ?? [];
 
   return (
     <Stack spacing={3} sx={{ maxWidth: 700, mx: 'auto' }}>
@@ -214,16 +196,16 @@ function EditListingForm({ listing }: EditListingFormProps) {
                   setValue('subcategory', '');
                 }}
               >
-                <MenuItem value="clothes">Одежда</MenuItem>
-                <MenuItem value="shoes">Обувь</MenuItem>
-                <MenuItem value="children">Детские вещи</MenuItem>
-                <MenuItem value="toys">Игрушки</MenuItem>
-                <MenuItem value="textile">Текстиль</MenuItem>
+                {listingCategoryOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </TextField>
             )}
           />
 
-          {selectedCategory && subcategoryOptions[selectedCategory] && (
+          {availableSubcategories.length > 0 && (
             <Controller
               name="subcategory"
               control={control}
@@ -236,7 +218,7 @@ function EditListingForm({ listing }: EditListingFormProps) {
                 >
                   <MenuItem value="">Не выбрана</MenuItem>
 
-                  {subcategoryOptions[selectedCategory].map((subcategory) => (
+                  {availableSubcategories.map((subcategory) => (
                     <MenuItem key={subcategory} value={subcategory}>
                       {subcategory}
                     </MenuItem>
@@ -258,9 +240,11 @@ function EditListingForm({ listing }: EditListingFormProps) {
                 error={Boolean(errors.condition)}
                 helperText={errors.condition?.message}
               >
-                <MenuItem value="new">Новое</MenuItem>
-                <MenuItem value="good">Хорошее состояние</MenuItem>
-                <MenuItem value="used">Б/у</MenuItem>
+                {listingConditionOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </TextField>
             )}
           />
@@ -323,39 +307,31 @@ function EditListingForm({ listing }: EditListingFormProps) {
               Фотографии объявления
             </Typography>
 
-            {(() => {
-              const images = listing.images?.length
-                ? listing.images
-                : listing.imageUrl
-                  ? [listing.imageUrl]
-                  : [];
-
-              return images.length > 0 ? (
-                <Stack
-                  direction="row"
-                  sx={{ flexWrap: 'wrap', gap: 2, mt: 1 }}
-                >
-                  {images.map((image, index) => (
-                    <Box
-                      key={`${image}-${index}`}
-                      component="img"
-                      src={image}
-                      alt={`Фотография ${index + 1}`}
-                      sx={{
-                        width: 120,
-                        height: 100,
-                        objectFit: 'cover',
-                        borderRadius: 2,
-                      }}
-                    />
-                  ))}
-                </Stack>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  Фотографии не добавлены.
-                </Typography>
-              )
-            })()}
+            {listingImages.length > 0 ? (
+              <Stack
+                direction="row"
+                sx={{ flexWrap: 'wrap', gap: 2, mt: 1 }}
+              >
+                {listingImages.map((image, index) => (
+                  <Box
+                    key={`${image}-${index}`}
+                    component="img"
+                    src={image}
+                    alt={`Фотография ${index + 1}`}
+                    sx={{
+                      width: 120,
+                      height: 100,
+                      objectFit: 'cover',
+                      borderRadius: 2,
+                    }}
+                  />
+                ))}
+              </Stack>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                Фотографии не добавлены.
+              </Typography>
+            )}
 
             <Typography variant="caption" color="text.secondary">
               Изменение фотографий добавим отдельно.

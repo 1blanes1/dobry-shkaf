@@ -22,21 +22,10 @@ import {
   getListingById,
 } from '../../entities/listing/api.ts';
 
+import { getListingCategoryLabel, getListingConditionLabel} from '../../entities/listing/constants.ts';
+
 import './ListingDetailsPage.css';
 
-const categoryLabels: Record<string, string> = {
-  clothes: 'Одежда',
-  shoes: 'Обувь',
-  children: 'Детские вещи',
-  toys: 'Игрушки',
-  textile: 'Текстиль',
-};
-
-const conditionLabels: Record<string, string> = {
-  new: 'Новое',
-  good: 'Хорошее состояние',
-  used: 'Б/у',
-};
 
 const exchangeTypeLabels: Record<string, string> = {
   free: 'Бесплатно',
@@ -101,13 +90,7 @@ export function ListingDetailsPage() {
   const currentUserId = '1';
   const isOwner = listing.userId === currentUserId;
 
-  // Поддерживаем новые объявления и старые записи с imageUrl
-  const images =
-    listing.images?.length
-      ? listing.images
-      : listing.imageUrl
-        ? [listing.imageUrl]
-        : [];
+  const images = listing.images ?? [];
 
   const activeImage = images[selectedImageIndex] ?? images[0];
 
@@ -196,7 +179,7 @@ export function ListingDetailsPage() {
 
       <div className="listing-details__section">
         <h2>Категория</h2>
-        <p>{categoryLabels[listing.category] ?? listing.category}</p>
+        <p>{getListingCategoryLabel(listing.category)}</p>
       </div>
 
       {listing.subcategory && (
@@ -229,7 +212,7 @@ export function ListingDetailsPage() {
 
       <div className="listing-details__section">
         <h2>Состояние вещи</h2>
-        <p>{conditionLabels[listing.condition] ?? listing.condition}</p>
+        <p>{getListingConditionLabel(listing.condition)}</p>
       </div>
 
       <div className="listing-details__section">

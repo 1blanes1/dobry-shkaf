@@ -13,56 +13,17 @@ import {
 import { Link } from 'react-router-dom';
 
 import { getListings } from '../../entities/listing/api.ts';
+
+import {
+  listingCategoryOptions,
+  getListingSubcategoryOptions,
+  listingConditionOptions,
+} from '../../entities/listing/constants.ts';
+
 import { ListingList } from '../../widgets/ListingList/ListingList.tsx';
 
 import './ListingsPage.css';
 
-const subcategoryOptions: Record<string, string[]> = {
-  clothes: [
-    'Верхняя одежда',
-    'Повседневная одежда',
-    'Одежда для беременных',
-  ],
-  shoes: [
-    'Взрослая обувь',
-    'Детская обувь',
-    'Спортивная обувь',
-    'Сезонная обувь',
-  ],
-  children: [
-    'Детская одежда',
-    'Детская обувь',
-    'Товары для младенцев',
-    'Крупногабаритные товары',
-  ],
-  toys: [
-    'Развивающие игрушки и погремушки',
-    'Настольные игры и пазлы',
-    'Конструкторы, куклы и машинки',
-    'Крупногабаритные товары',
-  ],
-  textile: [
-    'Постельное бельё, одеяла и подушки',
-    'Шторы и полотенца',
-    'Ветошь для переработки',
-  ],
-};
-
-const categoryOptions = [
-  { value: 'all', label: 'Все категории' },
-  { value: 'clothes', label: 'Одежда' },
-  { value: 'shoes', label: 'Обувь' },
-  { value: 'children', label: 'Детские вещи' },
-  { value: 'toys', label: 'Игрушки' },
-  { value: 'textile', label: 'Текстиль' },
-];
-
-const conditionOptions = [
-  { value: 'all', label: 'Любое состояние' },
-  { value: 'new', label: 'Новое' },
-  { value: 'good', label: 'Хорошее состояние' },
-  { value: 'used', label: 'Б/у' },
-];
 
 const exchangeOptions = [
   { value: 'all', label: 'Все' },
@@ -105,9 +66,14 @@ export function ListingsPage() {
   const [appliedFilters, setAppliedFilters] =
     useState<ListingFilters>(initialFilters);
 
-const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const allListings = listings ?? [];
+
+  const categoryOptions = [
+    { value: 'all', label: 'Все категории' },
+    ...listingCategoryOptions,
+  ];
 
   const sizeOptions = Array.from(
     new Set(
@@ -118,7 +84,7 @@ const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   ).sort((a, b) => a.localeCompare(b, 'ru'));
 
   const availableSubcategories =
-    subcategoryOptions[draftFilters.category] ?? [];
+    getListingSubcategoryOptions(draftFilters.category);
 
   const updateFilter = (
     key: keyof ListingFilters,
@@ -351,7 +317,10 @@ const [isFiltersOpen, setIsFiltersOpen] = useState(false);
                 updateFilter('condition', event.target.value)
               }
             >
-              {conditionOptions.map((option) => (
+              {[
+                { value: 'all', label: 'Все состояния' },
+                ...listingConditionOptions,
+              ].map((option) => (
                 <FormControlLabel
                   key={option.value}
                   value={option.value}

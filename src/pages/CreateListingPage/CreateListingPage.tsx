@@ -14,6 +14,13 @@ import { useState } from 'react';
 
 
 import { createListing, uploadListingImages, } from '../../entities/listing/api.ts';
+
+import {
+  listingCategoryOptions,
+  getListingSubcategoryOptions,
+  listingConditionOptions ,
+} from '../../entities/listing/constants.ts';
+
 import { ListingImageUpload } from '../../features/listing-image-upload/ListingImageUpload.tsx';
 
 import { useForm, useWatch } from 'react-hook-form';
@@ -21,40 +28,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
   listingSchema,
+  type ListingFormInput,
   type ListingFormValues,
 } from './listingSchema.ts';
 
-
-const subcategoryOptions: Record<string, string[]> = {
-  clothes: [
-    'Верхняя одежда',
-    'Повседневная одежда',
-    'Одежда для беременных',
-  ],
-  shoes: [
-    'Взрослая обувь',
-    'Детская обувь',
-    'Спортивная обувь',
-    'Сезонная обувь',
-  ],
-  children: [
-    'Детская одежда',
-    'Детская обувь',
-    'Товары для младенцев',
-    'Крупногабаритные товары',
-  ],
-  toys: [
-    'Развивающие игрушки и погремушки',
-    'Настольные игры и пазлы',
-    'Конструкторы, куклы и машинки',
-    'Крупногабаритные товары',
-  ],
-  textile: [
-    'Постельное бельё, одеяла и подушки',
-    'Шторы и полотенца',
-    'Ветошь для переработки',
-  ],
-};
 
 export function CreateListingPage() {
   const navigate = useNavigate();
@@ -94,7 +71,7 @@ export function CreateListingPage() {
     control,
     setValue,
     formState: { errors },
-  } = useForm<ListingFormValues>({
+  } = useForm<ListingFormInput, unknown, ListingFormValues>({
     resolver: zodResolver(listingSchema),
     defaultValues: {
       title: '',
@@ -173,14 +150,14 @@ export function CreateListingPage() {
             error={Boolean(errors.category)}
             helperText={errors.category?.message}
           >
-            <MenuItem value="clothes">Одежда</MenuItem>
-            <MenuItem value="shoes">Обувь</MenuItem>
-            <MenuItem value="children">Детские вещи</MenuItem>
-            <MenuItem value="toys">Игрушки</MenuItem>
-            <MenuItem value="textile">Текстиль</MenuItem>
+            {listingCategoryOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </TextField>
 
-          {selectedCategory && subcategoryOptions[selectedCategory] && (
+          {selectedCategory && getListingSubcategoryOptions(selectedCategory).length > 0 && (
             <TextField
               select
               label="Подкатегория"
@@ -190,7 +167,7 @@ export function CreateListingPage() {
             >
               <MenuItem value="">Не выбрана</MenuItem>
 
-              {subcategoryOptions[selectedCategory].map((subcategory) => (
+              {getListingSubcategoryOptions(selectedCategory).map((subcategory) => (
                 <MenuItem key={subcategory} value={subcategory}>
                   {subcategory}
                 </MenuItem>
@@ -207,9 +184,11 @@ export function CreateListingPage() {
             error={Boolean(errors.condition)}
             helperText={errors.condition?.message}
           >
-            <MenuItem value="new">Новое</MenuItem>
-            <MenuItem value="good">Хорошее состояние</MenuItem>
-            <MenuItem value="used">Б/у</MenuItem>
+            {listingConditionOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </TextField>
 
           <TextField

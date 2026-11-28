@@ -30,7 +30,15 @@ export const listingSchema = z
 
     condition: z
       .string()
-      .min(1, 'Выберите состояние вещи'),
+      .min(1, 'Выберите состояние вещи')
+      .pipe(
+        z.enum([
+          'new-with-tag',
+          'excellent',
+          'good',
+          'used',
+        ]),
+      ),
 
     city: z
       .string()
@@ -70,4 +78,6 @@ export const listingSchema = z
     }
   });
 
-export type ListingFormValues = z.infer<typeof listingSchema>;
+export type ListingFormInput = z.input<typeof listingSchema>;
+
+export type ListingFormValues = z.output<typeof listingSchema>;

@@ -1,5 +1,11 @@
 export type ListingExchangeType = 'free' | 'points' | 'barter';
 
+export type ListingCondition =
+  | 'new-with-tag'
+  | 'excellent'
+  | 'good'
+  | 'used';
+
 export type ListingStatus =
   | 'draft'
   | 'active'
@@ -13,10 +19,8 @@ export interface Listing {
   category: string;
   subcategory?: string;
   size?: string;
-  condition: string;
+  condition: ListingCondition;
   images?: string[];
-  // Временная совместимость со старыми записями
-  imageUrl?: string;
   exchangeType?: ListingExchangeType;
   pointsCost?: number;
   status?: ListingStatus;
@@ -32,10 +36,8 @@ export interface CreateListingDto {
   category: string;
   subcategory?: string;
   size?: string;
-  condition: string;
+  condition: ListingCondition;
   images?: string[];
-  // Временно оставляем до переделки формы
-  imageUrl?: string;
   exchangeType?: ListingExchangeType;
   pointsCost?: number;
   status?: 'draft' | 'active';
